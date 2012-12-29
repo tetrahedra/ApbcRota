@@ -88,7 +88,8 @@ class Apbc_Rota_Widget extends WP_Widget {
 
            
 		//get current/future dates only [parameter?]
-		$url = "http://spreadsheets.google.com/feeds/list/0Av9-QyyqzwDidElxOG5GcDY1cDZael92NVdDUGpkUkE/od6/public/values?sq=current=true";
+		//on turn of year, change od5 into the next worksheet - there must be a programmatic way of doing this!
+		$url = "http://spreadsheets.google.com/feeds/list/0Av9-QyyqzwDidElxOG5GcDY1cDZael92NVdDUGpkUkE/od5/public/values?sq=current=true";
 		//full page url [parameter?]
 		//$pageurl = "http://spreadsheets.google.com/pub?key=0Av9-QyyqzwDidElxOG5GcDY1cDZael92NVdDUGpkUkE&hl=en_GB&single=true&gid=0&range=A1%3AG99&output=html";
 		
@@ -174,10 +175,14 @@ class Apbc_Rota_Widget extends WP_Widget {
 	$leader = $feed[0]["leader"];
 	$speaker = $feed[0]["speaker"];
 	//$topic = $feed[0]["topic"];
-    echo("<div id='inline_apbcrota'>");
+        $time = $feed[0]["time"];
+        echo("<div id='inline_apbcrota'>");
 	echo("<h2>$sunday</h2>");
 	echo("<ul class='thisWeek'>");
-    echo("11am - 12.15pm <br />");
+        if($time != "") 
+            echo ($time . "<br />");
+        else
+            echo("11am - 12.30pm <br />");
 	echo("Worship leader: <strong>$leader</strong><br />");
 	echo("Speaker: <strong>$speaker</strong><br />");
 	echo("Coffee and tea afterwards<br />");
@@ -204,7 +209,7 @@ class Apbc_Rota_Widget extends WP_Widget {
             'bar' => 'something else',
         ), $atts ) );
 
-		$url = "http://spreadsheets.google.com/feeds/list/0Av9-QyyqzwDidElxOG5GcDY1cDZael92NVdDUGpkUkE/od6/public/values?sq=current=true";
+		$url = "http://spreadsheets.google.com/feeds/list/0Av9-QyyqzwDidElxOG5GcDY1cDZael92NVdDUGpkUkE/od5/public/values?sq=current=true";
 		$spreadsheetService = new Zend_Gdata_Spreadsheets();
 		$listFeed = $spreadsheetService->getSpreadsheetListFeedContents($url);
 
@@ -222,11 +227,15 @@ class Apbc_Rota_Widget extends WP_Widget {
         $leader = $feed[0]["leader"];
         $speaker = $feed[0]["speaker"];
         //$topic = $feed[0]["topic"];
+        $time = $feed[0]["time"];
         $optionalText = $feed[0]["optionaltext"];
 
         $output = "<div id='inline_apbcrota'>";
         $output .= "<h2>$sunday</h2>";
-        $output .= "11am - 12.15pm <br />";
+        if ($time != "")
+            $output .= $time . "<br />";
+        else
+            $output .= "11am - 12.30pm <br />";
         $output .= "Worship leader: <strong>$leader</strong><br />";
         $output .= "Speaker: <strong>$speaker</strong><br />";
         if($optionalText != "")
